@@ -4,7 +4,7 @@ using Orders_Core.Adapters.DataAccess;
 using Orders_Core.Ports.Resources;
 using Orders_Core.Ports.ViewModelRetrievers;
 
-namespace Orders_API.Adapters.Controllers
+namespace Store_API.Adapters.Controllers
 {
     public class OrdersController : ApiController
     {

@@ -75,11 +75,10 @@ namespace Store_API.Adapters.Service
         {
             configuration.MapHttpAttributeRoutes();
             configuration.Routes.MapHttpRoute(
-                name: "StorefrontAPI",
+                name: "StoreAPI",
                 routeTemplate: "{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
                 );
-             
         }
 
         private static void ConfigureDependencyInjection(HttpConfiguration configuration)

@@ -137,6 +137,7 @@
     <Compile Include="Adapters\Configuration\StoreServerConfiguration.cs" />
     <Compile Include="Adapters\Configuration\UnityHandlerFactory.cs" />
     <Compile Include="Adapters\Configuration\UnityMessageMapperFactory.cs" />
+    <Compile Include="Adapters\Controllers\OrdersController.cs" />
     <Compile Include="Adapters\Controllers\StoreFrontController.cs" />
     <Compile Include="Adapters\Service\IoCConfiguration.cs" />
     <Compile Include="Adapters\Service\Startup.cs" />
@@ -153,6 +154,10 @@
     <Folder Include="Adapters\Formatters\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Orders-Core\Orders-Core.csproj">
+      <Project>{0b86762c-9322-44c7-9665-146237032d9a}</Project>
+      <Name>Orders-Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Store-Core\Store-Core.csproj">
       <Project>{8e6455b1-8b56-4ba0-a2a5-20370e562b26}</Project>
       <Name>Store-Core</Name>

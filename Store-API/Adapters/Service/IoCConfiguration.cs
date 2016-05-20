@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using Microsoft.Practices.Unity;
+using Orders_Core.Adapters.DataAccess;
 using paramore.brighter.commandprocessor;
 using paramore.brighter.commandprocessor.Logging;
 using paramore.brighter.commandprocessor.messagestore.mssql;
@@ -22,6 +23,8 @@ namespace Store_API.Adapters.Service
         {
             container.RegisterType<StoreFrontController>();
             container.RegisterInstance(typeof(ILog), LogProvider.For<StoreService>(), new ContainerControlledLifetimeManager());
+            container.RegisterType<OrdersController>();
+            container.RegisterType<OrdersDAO>();
             container.RegisterType<AddOrderCommandHandler>();
             container.RegisterType<AddProductCommandHandler>();
             container.RegisterType<ChangeProductCommandHandler>();
