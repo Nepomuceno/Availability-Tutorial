@@ -25,7 +25,7 @@ namespace Products_Core.Adapters.Atom
             ProductDescription = productDescription;
             ProductId = productId;
             ProductName = productName;
-            productPrice = Price;
+            Price = productPrice;
         }
         [DataMember (Name = "type")]
         public ProductEntryType Type { get; set; }

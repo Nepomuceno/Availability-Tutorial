@@ -9,3 +9,9 @@ Content-Length: 268
 	<description>Honey Cake</description>
 	<dueDate>2015-06-30T23:25:48.0204060+01:00</dueDate>
 </AddOrderModel>
+
+
+GET http://localhost:5123/orders HTTP/1.1
+User-Agent: Fiddler
+Content-Type: application/xml
+Host: localhost:3476
