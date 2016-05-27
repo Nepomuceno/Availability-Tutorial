@@ -1,4 +1,5 @@
 ﻿using paramore.brighter.commandprocessor;
+using paramore.brighter.commandprocessor.logging.Attributes;
 using paramore.brighter.commandprocessor.Logging;
 using paramore.brighter.commandprocessor.policy.Attributes;
 using Products_Core.Adapters.DataAccess;

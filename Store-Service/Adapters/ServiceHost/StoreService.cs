@@ -61,7 +61,6 @@ namespace Store_Service.Adapters.ServiceHost
             var commandProcessor = CommandProcessorBuilder.With()
                 .Handlers(new HandlerConfiguration(subscriberRegistry, handlerFactory))
                 .Policies(policyRegistry)
-                .Logger(logger)
                 .NoTaskQueues()
                 .RequestContextFactory(new InMemoryRequestContextFactory())
                 .Build();

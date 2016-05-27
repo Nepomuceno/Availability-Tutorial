@@ -26,6 +26,7 @@ using Orders_Core.Adapters.MailGateway;
 using Orders_Core.Model;
 using Orders_Core.Ports.Commands;
 using paramore.brighter.commandprocessor;
+using paramore.brighter.commandprocessor.logging.Attributes;
 using paramore.brighter.commandprocessor.Logging;
 using paramore.brighter.commandprocessor.policy.Attributes;
 

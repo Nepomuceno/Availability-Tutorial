@@ -65,7 +65,6 @@ namespace Orders_Service.Adapters.ServiceHost
             var commandProcessor = CommandProcessorBuilder.With()
                 .Handlers(new HandlerConfiguration(subscriberRegistry, handlerFactory))
                 .Policies(policyRegistry)
-                .Logger(logger)
                 .NoTaskQueues()
                 .RequestContextFactory(new InMemoryRequestContextFactory())
                 .Build();
@@ -74,13 +73,10 @@ namespace Orders_Service.Adapters.ServiceHost
             var messageMapperRegistry = new MessageMapperRegistry(messageMapperFactory);
             messageMapperRegistry.Register<AddOrderCommand, AddOrderCommandMessageMapper>();
 
-            var rmqMessageConsumerFactory = new RmqMessageConsumerFactory(logger);
-
             _dispatcher = DispatchBuilder.With()
-                .Logger(logger)
                 .CommandProcessor(commandProcessor)
                 .MessageMappers(messageMapperRegistry)
-                .ChannelFactory(new InputChannelFactory(rmqMessageConsumerFactory))
+                .ChannelFactory(new InputChannelFactory(new RmqMessageConsumerFactory(), new RmqMessageProducerFactory()))
                 .ConnectionsFromConfiguration()
                 .Build();
         }

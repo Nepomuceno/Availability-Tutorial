@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.UI;
 using FakeItEasy;
 using Grean.AtomEventStore;
 using Machine.Specifications;
-using paramore.brighter.commandprocessor.Logging;
+using paramore.brighter.commandprocessor;
 using Products_Core.Adapters.Atom;
+using Products_Core.Ports.Commands;
 using Products_Core.Ports.Events;
 using Products_Core.Ports.Handlers;
+using Product_Service;
 
 namespace Products_Core.Adapters.Tests
 {
@@ -20,7 +19,8 @@ namespace Products_Core.Adapters.Tests
     {
         private static ProductAddedEventHandler s_handler;
         private static ProductAddedEvent s_event;
-        private static IEnumerable<ProductEntry> s_events; 
+        private static IEnumerable<ProductEntry> s_events;
+        private static IAmACommandProcessor s_commandProcessor;
 
         private Establish context = () =>
         {
@@ -44,16 +44,17 @@ namespace Products_Core.Adapters.Tests
                 storage,       // an IAtomEventStorage object
                 serializer);   // an IContentSerializer object
 
+            s_commandProcessor = A.Fake<IAmACommandProcessor>();
 
-            var logger = A.Fake<ILog>();
-
-            s_handler = new ProductAddedEventHandler(obs, logger);
+            s_handler = new ProductAddedEventHandler(obs, s_commandProcessor);
             s_event = new ProductAddedEvent(123, "Almond Cake", "Nutty cake goodness", 123.45);
         };
 
         private Because of = () => s_handler.Handle(s_event);
 
         private It _should_write_an_atom_feed_entry = () => s_events.First().ShouldNotBeNull();
+
+        private It _should_invalidate_the_cache = () => A.CallTo(() => s_commandProcessor.Send(A<InvalidateCacheCommand>.That.Matches(cmd => cmd.ResourceToInvalidate == Globals.ProductFeed)));
     }
 
     [Subject(typeof(ProductAddedEventHandler))]
@@ -66,6 +67,7 @@ namespace Products_Core.Adapters.Tests
         private static AtomFeed secondPage;
         private static AtomFeed thirdPage;
         private static AtomFeed fourthPage;
+        private static IAmACommandProcessor s_commandProcessor;
 
         private Establish context = () =>
         {
@@ -90,9 +92,9 @@ namespace Products_Core.Adapters.Tests
                 serializer);   // an IContentSerializer object
 
 
-            var logger = A.Fake<ILog>();
+            s_commandProcessor = A.Fake<IAmACommandProcessor>();
 
-            s_handler = new ProductAddedEventHandler(obs, logger);
+            s_handler = new ProductAddedEventHandler(obs, s_commandProcessor);
         };
 
         private Because of = () =>

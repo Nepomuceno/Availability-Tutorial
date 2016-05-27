@@ -30,7 +30,7 @@ namespace Product_API.Adapters.Controllers
         public FeedController()
         {
             _events = new FifoEvents<ProductEntry>(
-                Globals.EventStreamId, 
+                Globals.ProductEventStreamId, 
                 s_storage,       
                 s_serializer);   
         }

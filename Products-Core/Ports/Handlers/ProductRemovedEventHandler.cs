@@ -30,7 +30,7 @@ namespace Products_Core.Ports.Handlers
                 );
 
             _observer= new AtomEventObserver<ProductEntry>(
-                Globals.EventStreamId,
+                Globals.ProductEventStreamId,
                 25,
                 storage,
                 serializer

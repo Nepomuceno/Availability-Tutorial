@@ -3,7 +3,7 @@ using CacheCow.Server;
 using Microsoft.Owin.Diagnostics;
 using Microsoft.Practices.Unity;
 using Owin;
-using WebApiContrib.IoC.Unity;
+using Unity.WebApi;
 
 namespace Store_API.Adapters.Service
 {
@@ -85,7 +85,7 @@ namespace Store_API.Adapters.Service
         {
             s_container = new UnityContainer();
             IoCConfiguration.Run(s_container);
-            configuration.DependencyResolver = new UnityResolver(s_container);
+            configuration.DependencyResolver = new UnityDependencyResolver(s_container);
         }
     }
 }

@@ -26,6 +26,7 @@ using Orders_Core.Adapters.DataAccess;
 using Orders_Core.Model;
 using Orders_Core.Ports.Commands;
 using paramore.brighter.commandprocessor;
+using paramore.brighter.commandprocessor.logging.Attributes;
 using paramore.brighter.commandprocessor.Logging;
 using paramore.brighter.commandprocessor.policy.Attributes;
 
@@ -47,7 +48,7 @@ namespace Orders_Core.Ports.Handlers
         {
             using (var scope = _ordersDao.BeginTransaction())
             {
-                base.logger.DebugFormat(string.Format("Writing new order for customer: {0}", addOrderCommand.CustomerName));
+                base.Logger.DebugFormat(string.Format("Writing new order for customer: {0}", addOrderCommand.CustomerName));
                 var inserted = _ordersDao.Add(
                     new Order(
                         customerName: addOrderCommand.CustomerName,

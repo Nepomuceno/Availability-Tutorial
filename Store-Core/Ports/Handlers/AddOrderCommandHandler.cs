@@ -23,6 +23,7 @@ THE SOFTWARE. */
 #endregion
 
 using paramore.brighter.commandprocessor;
+using paramore.brighter.commandprocessor.logging.Attributes;
 using paramore.brighter.commandprocessor.Logging;
 using Store_Core.Ports.Commands;
 

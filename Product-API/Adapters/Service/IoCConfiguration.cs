@@ -62,7 +62,6 @@ namespace Product_API.Adapters.Service
             var commandProcessor = CommandProcessorBuilder.With()
                     .Handlers(new HandlerConfiguration(subscriberRegistry, handlerFactory))
                     .Policies(policyRegistry)
-                    .Logger(container.Resolve<ILog>())
                     .NoTaskQueues()
                     .RequestContextFactory(new InMemoryRequestContextFactory())
                     .Build();

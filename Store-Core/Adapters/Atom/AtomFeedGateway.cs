@@ -10,13 +10,12 @@ using Store_Core.Adapters.DataAccess;
 
 namespace Store_Core.Adapters.Atom
 {
-        public class AtomFeedGateway
-        {
+    public class AtomFeedGateway
+    {
         private ThreadLocal<HttpClient> _client;
         private readonly double _timeout;
-
-            private readonly ILastReadFeedItemDAO _lastReadFeedItemDao;
-            public readonly ILog _logger;
+        private readonly ILastReadFeedItemDAO _lastReadFeedItemDao;
+        public readonly ILog _logger;
 
         public AtomFeedGateway(ILastReadFeedItemDAO lastReadFeedItemDao, ILog logger)
         {

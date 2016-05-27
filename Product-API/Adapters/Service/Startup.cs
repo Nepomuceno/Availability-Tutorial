@@ -3,7 +3,7 @@ using CacheCow.Server;
 using Microsoft.Owin.Diagnostics;
 using Microsoft.Practices.Unity;
 using Owin;
-using WebApiContrib.IoC.Unity;
+using Unity.WebApi;
 
 namespace Product_API.Adapters.Service
 {
@@ -79,14 +79,13 @@ namespace Product_API.Adapters.Service
                 routeTemplate: "{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
                 );
-             
         }
 
         private static void ConfigureDependencyInjection(HttpConfiguration configuration)
         {
             s_container = new UnityContainer();
             IoCConfiguration.Run(s_container);
-            configuration.DependencyResolver = new UnityResolver(s_container);
+            configuration.DependencyResolver = new UnityDependencyResolver(s_container);
         }
     }
 }

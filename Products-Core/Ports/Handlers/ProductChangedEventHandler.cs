@@ -5,6 +5,7 @@ using Microsoft.Practices.Unity;
 using paramore.brighter.commandprocessor;
 using paramore.brighter.commandprocessor.Logging;
 using Products_Core.Adapters.Atom;
+using Products_Core.Ports.Commands;
 using Products_Core.Ports.Events;
 using Product_Service;
 
@@ -13,10 +14,12 @@ namespace Products_Core.Ports.Handlers
     public class ProductChangedEventHandler : RequestHandler<ProductChangedEvent>
     {
         private readonly IObserver<ProductEntry> _observer;
+        private readonly IAmACommandProcessor _commandProcessor;
 
-        public ProductChangedEventHandler(IObserver<ProductEntry> observer, ILog logger) : base(logger)
+        public ProductChangedEventHandler(IObserver<ProductEntry> observer, IAmACommandProcessor commandProcessor, ILog logger) : base(logger)
         {
             _observer = observer;
+            _commandProcessor = commandProcessor;
         }
 
         [InjectionConstructor]
@@ -29,7 +32,7 @@ namespace Products_Core.Ports.Handlers
                 );
 
             _observer= new AtomEventObserver<ProductEntry>(
-                Globals.EventStreamId,
+                Globals.ProductEventStreamId,
                 25,
                 storage,
                 serializer
@@ -44,6 +47,8 @@ namespace Products_Core.Ports.Handlers
                 productDescription: productChangedEvent.ProductDescription, 
                 productName: productChangedEvent.ProductName, 
                 productPrice: productChangedEvent.ProductPrice));
+
+            _commandProcessor.Send(new InvalidateCacheCommand(Globals.ProductFeed));
 
             return base.Handle(productChangedEvent);
         }
