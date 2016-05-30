@@ -16,15 +16,17 @@ namespace Products_Core.Ports.Handlers
         private readonly IObserver<ProductEntry> _observer;
         private readonly IAmACommandProcessor _commandProcessor;
 
-        public ProductChangedEventHandler(IObserver<ProductEntry> observer, IAmACommandProcessor commandProcessor, ILog logger) : base(logger)
+        public ProductChangedEventHandler(IObserver<ProductEntry> observer, IAmACommandProcessor commandProcessor) 
         {
             _observer = observer;
             _commandProcessor = commandProcessor;
         }
 
         [InjectionConstructor]
-        public ProductChangedEventHandler(ILog logger) : base(logger)
+        public ProductChangedEventHandler(IAmACommandProcessor commandProcessor)
         {
+            _commandProcessor = commandProcessor;
+
             var storage = new AtomEventsInFiles(new DirectoryInfo(Globals.StoragePath));
             var serializer = new DataContractContentSerializer(
                 DataContractContentSerializer

@@ -3,7 +3,6 @@ using System.IO;
 using Grean.AtomEventStore;
 using Microsoft.Practices.Unity;
 using paramore.brighter.commandprocessor;
-using paramore.brighter.commandprocessor.Logging;
 using Products_Core.Adapters.Atom;
 using Products_Core.Ports.Events;
 using Product_Service;
@@ -13,16 +12,19 @@ namespace Products_Core.Ports.Handlers
     public class ProductRemovedEventHandler : RequestHandler<ProductRemovedEvent>
     {
         private readonly IObserver<ProductEntry> _observer;
+        private readonly IAmACommandProcessor _commandProcessor;
 
         //constuctor intended for tests
-        public ProductRemovedEventHandler(IObserver<ProductEntry> observer, ILog logger) : base(logger)
+        public ProductRemovedEventHandler(IObserver<ProductEntry> observer, IAmACommandProcessor commandProcessor) 
         {
             _observer = observer;
+            _commandProcessor = commandProcessor;
         }
 
         [InjectionConstructor]
-        public ProductRemovedEventHandler(ILog logger) : base(logger)
+        public ProductRemovedEventHandler(IAmACommandProcessor commandProcessor)
         {
+            _commandProcessor = commandProcessor;
             var storage = new AtomEventsInFiles(new DirectoryInfo(Globals.StoragePath));
             var serializer = new DataContractContentSerializer(
                 DataContractContentSerializer

@@ -24,8 +24,10 @@ namespace Products_Core.Ports.Handlers
         }
 
         [InjectionConstructor]
-        public ProductAddedEventHandler() 
+        public ProductAddedEventHandler(IAmACommandProcessor commandProcessor)
         {
+            _commandProcessor = commandProcessor;
+
             var storage = new AtomEventsInFiles(new DirectoryInfo(Globals.StoragePath));
             var serializer = new DataContractContentSerializer(
                 DataContractContentSerializer

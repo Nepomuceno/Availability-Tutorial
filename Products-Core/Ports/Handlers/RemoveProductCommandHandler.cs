@@ -12,7 +12,7 @@ namespace Products_Core.Ports.Handlers
         private readonly IProductsDAO _productsDao;
         private readonly IAmACommandProcessor _commandProcessor;
 
-        public RemoveProductCommandHandler(IProductsDAO productsDao, IAmACommandProcessor commandProcessor, ILog logger) : base(logger)
+        public RemoveProductCommandHandler(IProductsDAO productsDao, IAmACommandProcessor commandProcessor) 
         {
             _productsDao = productsDao;
             _commandProcessor = commandProcessor;

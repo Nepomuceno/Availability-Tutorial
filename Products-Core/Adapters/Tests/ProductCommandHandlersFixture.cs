@@ -54,14 +54,13 @@ namespace Orders_Core.Adapters.Tests
 
         private Establish _context = () =>
         {
-            var logger = A.Fake<ILog>();
             s_commandProcessor = A.Fake<IAmACommandProcessor>();
             s_productsDAO = new ProductsDAO();
             s_productsDAO.Clear();
 
             s_cmd = new AddProductCommand(PRODUCT_NAME, PRODUCT_DESCRIPTION, PRODUCT_PRICE);
 
-            s_handler = new AddProductCommandHandler(s_productsDAO, s_commandProcessor, logger);
+            s_handler = new AddProductCommandHandler(s_productsDAO, s_commandProcessor);
         };
 
         private Because _of = () =>
@@ -91,7 +90,6 @@ namespace Orders_Core.Adapters.Tests
 
         private Establish _context = () =>
         {
-            var logger = A.Fake<ILog>();
             s_commandProcessor = A.Fake<IAmACommandProcessor>();
             s_productToBeEdited = new Product("Coffee Cake", "Coffee Cake with a real jolt", 3.50);
             s_productssDAO = new ProductsDAO();
@@ -100,7 +98,7 @@ namespace Orders_Core.Adapters.Tests
 
             s_cmd = new ChangeProductCommand(s_productToBeEdited.Id, NEW_PRODUCT_NAME , NEW_PRODUCT_DESCRIPTION, NEW_PRICE);
 
-            s_handler = new ChangeProductCommandHandler(s_productssDAO, s_commandProcessor, logger);
+            s_handler = new ChangeProductCommandHandler(s_productssDAO, s_commandProcessor);
         };
 
         private Because _of = () =>
@@ -126,7 +124,6 @@ namespace Orders_Core.Adapters.Tests
 
         private Establish _context = () =>
         {
-            var logger = A.Fake<ILog>();
             s_commandProcessor = A.Fake<IAmACommandProcessor>();
             s_productToBeRemoved = new Product("Coffee Cake", "Coffee Cake with a real jolt", 3.50);
             s_productssDAO = new ProductsDAO();
@@ -135,7 +132,7 @@ namespace Orders_Core.Adapters.Tests
 
             s_cmd = new RemoveProductCommand(s_productToBeRemoved.Id);
 
-            s_handler = new RemoveProductCommandHandler(s_productssDAO, s_commandProcessor, logger);
+            s_handler = new RemoveProductCommandHandler(s_productssDAO, s_commandProcessor);
         };
 
         private Because _of = () =>

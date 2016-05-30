@@ -18,7 +18,7 @@ namespace Product_API.Adapters.Service
             Globals.StoragePath = Path.Combine(Environment.CurrentDirectory, configuration.Storage.Directory);
             Globals.PageSize = 25;
             Globals.ProductEventStreamId = configuration.Stream.Id;
-            Globals.ProductFeed = new Uri(Globals.HostName + "\feed");
+            Globals.ProductFeed = new Uri("http://" + Globals.HostName + "/feed"); //http://localhost:3416/feed
             _app = WebApp.Start<StartUp>(configuration.Address.Uri.AbsoluteUri);
             return true;
         }

@@ -4,9 +4,11 @@ using paramore.brighter.commandprocessor;
 using paramore.brighter.commandprocessor.Logging;
 using Polly;
 using Products_Core.Adapters.DataAccess;
+using Products_Core.Ports.Caching;
 using Products_Core.Ports.Commands;
 using Products_Core.Ports.Events;
 using Products_Core.Ports.Handlers;
+using Product_API.Adapters.Caching;
 using Product_API.Adapters.Configuration;
 using Product_API.Adapters.Controllers;
 
@@ -26,6 +28,8 @@ namespace Product_API.Adapters.Service
             container.RegisterType<ProductChangedEventHandler>();
             container.RegisterType<ProductRemovedEventHandler>();
             container.RegisterType<RemoveProductCommandHandler>();
+            container.RegisterType<InvalidateCacheCommandHandler>();
+            container.RegisterType<IAmACache, Cache>();
 
             var handlerFactory = new UnityHandlerFactory(container);
 
@@ -35,7 +39,9 @@ namespace Product_API.Adapters.Service
                 {typeof(ChangeProductCommand), typeof(ChangeProductCommandHandler)},
                 {typeof(RemoveProductCommand), typeof(RemoveProductCommandHandler)},
                 {typeof(ProductAddedEvent), typeof(ProductAddedEventHandler)},
+                {typeof(ProductChangedEvent), typeof(ProductChangedEventHandler)},
                 {typeof(ProductRemovedEvent), typeof(ProductRemovedEventHandler)},
+                {typeof(InvalidateCacheCommand), typeof(InvalidateCacheCommandHandler)},
             };
 
             //create policies
@@ -58,13 +64,15 @@ namespace Product_API.Adapters.Service
                 {CommandProcessor.CIRCUITBREAKER, circuitBreakerPolicy}
             };
 
+            var handlerConfiguration = new HandlerConfiguration(subscriberRegistry, handlerFactory);
+            var inMemoryRequestContextFactory = new InMemoryRequestContextFactory();
 
             var commandProcessor = CommandProcessorBuilder.With()
-                    .Handlers(new HandlerConfiguration(subscriberRegistry, handlerFactory))
-                    .Policies(policyRegistry)
-                    .NoTaskQueues()
-                    .RequestContextFactory(new InMemoryRequestContextFactory())
-                    .Build();
+                .Handlers(handlerConfiguration)
+                .Policies(policyRegistry)
+                .NoTaskQueues()
+                .RequestContextFactory(inMemoryRequestContextFactory)
+                .Build();
 
             container.RegisterInstance(typeof(IAmACommandProcessor), commandProcessor);
         }
