@@ -38,7 +38,11 @@ namespace Product_API.Adapters.Controllers
         [HttpGet]
         public HttpResponseMessage Recent()
         {
-            var feed = _events.ReadFirst();
+            //We are going to simulate an error here that causes the service to spin
+            AtomFeed feed;
+            while (true)
+                feed = _events.ReadFirst();
+
             if (feed != null)
             {
                 var sb = new StringBuilder();

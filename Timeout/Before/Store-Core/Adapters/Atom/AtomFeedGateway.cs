@@ -13,7 +13,6 @@ namespace Store_Core.Adapters.Atom
     public class AtomFeedGateway
     {
         private ThreadLocal<HttpClient> _client;
-        private readonly double _timeout;
         private readonly ILastReadFeedItemDAO _lastReadFeedItemDao;
         public readonly ILog _logger;
 
@@ -21,7 +20,6 @@ namespace Store_Core.Adapters.Atom
         {
             _lastReadFeedItemDao = lastReadFeedItemDao;
             _logger = logger;
-            _timeout = 5000;
         }
 
 
@@ -52,13 +50,13 @@ namespace Store_Core.Adapters.Atom
 
         public HttpClient Client()
         {
-            _client = new ThreadLocal<HttpClient>(() => CreateClient(_timeout));
+            _client = new ThreadLocal<HttpClient>(() => CreateClient());
             return _client.Value;
         }
 
   
 
-        private HttpClient CreateClient(double timeout)
+        private HttpClient CreateClient()
         {
             var requestHandler = new WebRequestHandler
             {
@@ -67,7 +65,9 @@ namespace Store_Core.Adapters.Atom
                 CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.Revalidate)
             };
             var client = HttpClientFactory.Create(requestHandler);
-            client.Timeout = TimeSpan.FromMilliseconds(timeout);
+            //HTTPClient is well-behaved and will always timeout. The default is 100000ms which is long, but to show what happens, let's 
+            //set the value high here
+            client.Timeout = TimeSpan.FromMilliseconds(int.MaxValue);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/xml"));
             return client;
         }

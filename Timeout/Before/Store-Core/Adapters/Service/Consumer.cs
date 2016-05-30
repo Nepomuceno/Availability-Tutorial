@@ -30,17 +30,6 @@ namespace Store_Core.Adapters.Service
             _commandProcessor = commandProcessor;
             _logger = logger;
             _atomFeedGateway = new AtomFeedGateway(_lastReadFeedItemDao, _logger);
-            _retryPolicy = Policy
-                .Handle<ApplicationException>()
-                .WaitAndRetry(new[]
-                {
-                    TimeSpan.FromMilliseconds(10),
-                    TimeSpan.FromMilliseconds(20),
-                    TimeSpan.FromMilliseconds(30),   
-                }, (exception, timespan) =>
-                {
-                    logger.WarnException("Error connecting to the server - will retry in {0} milliseconds", exception, timespan.Milliseconds);
-                });
         }
 
         public void Consume(Uri uri)
@@ -54,38 +43,33 @@ namespace Store_Core.Adapters.Service
                     {
                         try
                         {
-                            _retryPolicy.Execute(() =>
+                            foreach (var entry in _atomFeedGateway.GetFeedEntries(uri))
                             {
-                                foreach (var entry in _atomFeedGateway.GetFeedEntries(uri))
+                                _logger.Debug("Writing Reference Data change");
+                                switch (entry.Type)
                                 {
-                                    _logger.Debug("Writing Reference Data change");
-                                    switch (entry.Type)
-                                    {
-                                        case ProductEntryType.Created:
-                                            _commandProcessor.Send(new AddProductCommand(entry.ProductName,
-                                                entry.ProductDescription,
-                                                entry.Price));
-                                            break;
-                                        case ProductEntryType.Updated:
-                                            _commandProcessor.Send(new ChangeProductCommand(entry.ProductId,
-                                                entry.ProductName,
-                                                entry.ProductDescription, entry.Price));
-                                            break;
-                                        case ProductEntryType.Deleted:
-                                            _commandProcessor.Send(new RemoveProductCommand(entry.ProductId));
-                                            break;
-                                    }
+                                    case ProductEntryType.Created:
+                                        _commandProcessor.Send(new AddProductCommand(entry.ProductName,
+                                            entry.ProductDescription,
+                                            entry.Price));
+                                        break;
+                                    case ProductEntryType.Updated:
+                                        _commandProcessor.Send(new ChangeProductCommand(entry.ProductId,
+                                            entry.ProductName,
+                                            entry.ProductDescription, entry.Price));
+                                        break;
+                                    case ProductEntryType.Deleted:
+                                        _commandProcessor.Send(new RemoveProductCommand(entry.ProductId));
+                                        break;
                                 }
-                                Task.Delay(Globals.PollingIntervalInMilliseconds).Wait();
-                            });
+                            }
+                            Task.Delay(Globals.PollingIntervalInMilliseconds).Wait();
                         }
-                        catch (ApplicationException)
+                        catch (Exception)
                         {
-                            _logger.DebugFormat("Exiting retry loop to check for cancellation, will restart loop in {0} milliseconds if not cancelled", Globals.ErrorDelayInMilliseconds);
-                             Task.Delay(Globals.ErrorDelayInMilliseconds).Wait();
+                            _logger.Error("Something went wrong");
+                            throw;
                         }
-
-
                     }
                 },
                 TaskCreationOptions.LongRunning
