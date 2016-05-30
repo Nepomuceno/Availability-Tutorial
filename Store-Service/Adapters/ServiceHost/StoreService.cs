@@ -3,6 +3,7 @@ using Microsoft.Practices.Unity;
 using paramore.brighter.commandprocessor;
 using paramore.brighter.commandprocessor.Logging;
 using Polly;
+using Store_Core;
 using Store_Core.Adapters.DataAccess;
 using Store_Core.Adapters.Service;
 using Store_Core.Ports.Commands;
@@ -71,6 +72,8 @@ namespace Store_Service.Adapters.ServiceHost
 
         public bool Start(HostControl hostControl)
         {
+            Globals.PollingIntervalInMilliseconds = 3000;
+            Globals.ErrorDelayInMilliseconds = 10000;
             _consumer.Consume(new Uri("http://localhost:3416/feed"));
             return true;
         }
