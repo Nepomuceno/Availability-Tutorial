@@ -1,4 +1,6 @@
-﻿using System.Web.Http;
+﻿using System.Net;
+using System.Net.Http;
+using System.Web.Http;
 using paramore.brighter.commandprocessor;
 using Products_Core.Adapters.DataAccess;
 using Products_Core.Ports.Commands;
@@ -36,6 +38,17 @@ namespace Product_API.Adapters.Controllers
         [HttpPost]
         public ProductModel CreateProduct(AddProductModel newProduct)
         {
+            if (newProduct == null)
+            {
+                var message = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent("Product in entity body missing or badly-formed and could not be parsed"),
+                    ReasonPhrase = "Missing Product"
+                };
+                throw new HttpResponseException(message);
+            }
+                
+
             var addProductCommand = new AddProductCommand(
                 productName: newProduct.ProductName,
                 productDescription: newProduct.ProductDescription,
