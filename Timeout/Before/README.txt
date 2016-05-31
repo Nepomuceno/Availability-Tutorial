@@ -1,3 +1,8 @@
+SHOWING A DB TIMEOUT
+--------------------
+
+SHOWING AN HTTP TIMEOUT
+-----------------------
 Demonstrates what happens when we don't have a timeout (or in this case a timeout so long we might as well not have one).
 Use the provided .cmd files
 Start the Product-API

@@ -12,17 +12,7 @@ namespace Products_Core.Adapters.DataAccess
 
         public ProductsDAO()
         {
-            if (System.Web.HttpContext.Current != null)
-            {
-                var databasePath = System.Web.HttpContext.Current.Server.MapPath("~\\App_Data\\Products.sdf");
-                _db = Database.Opener.OpenFile(databasePath);
-            }
-            else
-            {
-                var file = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase.Substring(8)), "App_Data\\Products.sdf");
-
-                _db = Database.OpenFile(file);
-            }
+            _db = Database.OpenConnection("data source =.; initial catalog = Products; integrated security-true");
         }
 
         public dynamic BeginTransaction()

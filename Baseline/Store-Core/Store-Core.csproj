@@ -113,17 +113,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReferenceData\ProductReference.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="App_Data\MessageStore.sdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Store.sdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Data\MessageStore.sql" />
+    <Content Include="Data\Store.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Data\stores_ddl_script.bat" />
     <None Include="Ports\Mappers\packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

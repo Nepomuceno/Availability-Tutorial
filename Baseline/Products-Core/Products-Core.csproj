@@ -128,11 +128,8 @@
     <Compile Include="Ports\ViewModelRetrievers\ProductModelRetriever.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="App_Data\Products.sdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Data\Products.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

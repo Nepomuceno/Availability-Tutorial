@@ -67,7 +67,7 @@ namespace Store_API.Adapters.Service
             var gateway = new RmqMessageProducer(container.Resolve<ILog>());
 
             var dbPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase.Substring(8)), "App_Data\\MessageStore.sdf");
-            IAmAMessageStore<Message> sqlMessageStore = new MsSqlMessageStore(new MsSqlMessageStoreConfiguration("DataSource=\"" + dbPath + "\"", "Messages", MsSqlMessageStoreConfiguration.DatabaseType.SqlCe), logger);
+            IAmAMessageStore<Message> sqlMessageStore = new MsSqlMessageStore(new MsSqlMessageStoreConfiguration("data source =.; initial catalog = MessageStore; integrated security-true", "Messages", MsSqlMessageStoreConfiguration.DatabaseType.MsSqlServer), logger);
 
             var commandProcessor = CommandProcessorBuilder.With()
                     .Handlers(new HandlerConfiguration(subscriberRegistry, handlerFactory))
