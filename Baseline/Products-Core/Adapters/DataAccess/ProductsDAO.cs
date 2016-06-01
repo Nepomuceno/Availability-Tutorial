@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using Products_Core.Model;
 using Simple.Data;
 
@@ -12,7 +10,7 @@ namespace Products_Core.Adapters.DataAccess
 
         public ProductsDAO()
         {
-            _db = Database.OpenConnection("data source =.; initial catalog = Products; integrated security-true");
+            _db = Database.OpenConnection("Data Source=.;Initial Catalog=Products;Application Name=Availability_Tutorial;Connect Timeout=60;Trusted_Connection=True");
         }
 
         public dynamic BeginTransaction()

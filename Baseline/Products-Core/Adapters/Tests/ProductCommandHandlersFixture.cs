@@ -22,16 +22,9 @@ THE SOFTWARE. */
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using FakeItEasy;
-using Grean.AtomEventStore;
 using Machine.Specifications;
 using paramore.brighter.commandprocessor;
-using paramore.brighter.commandprocessor.Logging;
-using Products_Core.Adapters.Atom;
 using Products_Core.Adapters.DataAccess;
 using Products_Core.Model;
 using Products_Core.Ports.Commands;

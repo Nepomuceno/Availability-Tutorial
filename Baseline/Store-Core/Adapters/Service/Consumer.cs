@@ -17,7 +17,6 @@ namespace Store_Core.Adapters.Service
         private readonly ILog _logger;
         private Task _controlTask;
         private bool _consumeFeed;
-        private static readonly int s_delay = 5000;
         private readonly AtomFeedGateway _atomFeedGateway;
         private readonly Policy _retryPolicy;
 
