@@ -23,8 +23,6 @@ THE SOFTWARE. */
 #endregion
 
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using Orders_Core.Model;
 using Simple.Data;
 
@@ -36,7 +34,7 @@ namespace Orders_Core.Adapters.DataAccess
 
         public OrdersDAO()
         {
-            _db = Database.OpenConnection("data source =.; initial catalog = Orders; integrated security-true");
+            _db = Database.OpenConnection("Data Source=.;Initial Catalog=Orders;Application Name=Availability_Tutorial;Connect Timeout=60;Trusted_Connection=True");
         }
 
         public Order Add(Order newOrder)

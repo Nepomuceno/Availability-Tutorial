@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using Simple.Data;
 using Store_Core.Adapters.Atom;
 
@@ -13,17 +11,7 @@ namespace Store_Core.Adapters.DataAccess
 
         public LastReadFeedItemDAO()
         {
-            if (System.Web.HttpContext.Current != null)
-            {
-                var databasePath = System.Web.HttpContext.Current.Server.MapPath("~\\App_Data\\Store.sdf");
-                _db = Database.Opener.OpenFile(databasePath);
-            }
-            else
-            {
-                var file = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase.Substring(8)), "App_Data\\Store.sdf");
-
-                _db = Database.OpenFile(file);
-            }
+            _db = Database.OpenConnection("Data Source=.;Initial Catalog=Store;Application Name=Availability_Tutorial;Connect Timeout=60;Trusted_Connection=True");
         }
 
         public dynamic BeginTransaction()
