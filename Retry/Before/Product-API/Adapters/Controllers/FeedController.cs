@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Xml;
 using Grean.AtomEventStore;
@@ -15,6 +17,7 @@ namespace Product_API.Adapters.Controllers
         private FifoEvents<ProductEntry> _events;
         private static readonly AtomEventsInFiles s_storage;
         private static readonly DataContractContentSerializer s_serializer;
+        private static bool isFirstCall = false;
 
         static FeedController()
         {
@@ -37,12 +40,15 @@ namespace Product_API.Adapters.Controllers
         [HttpGet]
         public HttpResponseMessage Recent()
         {
-            //create a 'defect' in our app by spinning, a caller will never get a response and must timeout
-            bool spin = true;
-            while (spin)
-                spin = true;
+            //This time we just want to wait on the first call, past the set timeout on the client, though we return eventually
+            //but on subsequent calls, if the client retries, succeed.
+            //We want to more accurately simulate retryable failure
 
-            /*
+            if (isFirstCall)
+            {
+                isFirstCall = false; //set the flag immediately, so that subsequent calls will succeed when issued by client
+                Task.Delay(new TimeSpan(3000)).Wait();
+            }
 
             var feed = _events.ReadFirst();
             if (feed != null)
@@ -60,8 +66,8 @@ namespace Product_API.Adapters.Controllers
                     };
                 }
             }
-            */
-            return new HttpResponseMessage(HttpStatusCode.GatewayTimeout);
+            
+            return new HttpResponseMessage(HttpStatusCode.NoContent);
         }
     }
 }
