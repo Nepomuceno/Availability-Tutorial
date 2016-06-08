@@ -11,7 +11,8 @@ namespace Products_Core.Adapters.DataAccess
 
         public ProductsDAO()
         {
-            _db = Database.OpenConnection("Data Source=.;Initial Catalog=Products;Application Name=Availability_Tutorial;Connect Timeout=60;Trusted_Connection=True");
+            //There is a timeout here as well, for connections. We talk about that later, for now it is also set of infinite wait
+            _db = Database.OpenConnection("Data Source=.;Initial Catalog=Products;Application Name=Availability_Tutorial;Connect Timeout=0;Trusted_Connection=True");
         }
 
         public dynamic BeginTransaction()
