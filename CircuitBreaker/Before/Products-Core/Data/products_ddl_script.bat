@@ -1,2 +1,0 @@
-
-sqlcmd -i Products.sql
