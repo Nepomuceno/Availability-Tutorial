@@ -1,6 +1,5 @@
 ﻿using paramore.brighter.commandprocessor;
 using paramore.brighter.commandprocessor.logging.Attributes;
-using paramore.brighter.commandprocessor.Logging;
 using paramore.brighter.commandprocessor.policy.Attributes;
 using Products_Core.Adapters.DataAccess;
 using Products_Core.Model;
@@ -21,6 +20,7 @@ namespace Products_Core.Ports.Handlers
         }
 
         [RequestLogging(step: 1, timing: HandlerTiming.Before)]
+        [UsePolicy(CommandProcessor.CIRCUITBREAKER, step:2)]
         [UsePolicy(CommandProcessor.RETRYPOLICY, step: 3)]
         public override AddProductCommand Handle(AddProductCommand addProductCommand)
         {

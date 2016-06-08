@@ -1,7 +1,10 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http;
 using paramore.brighter.commandprocessor;
+using Polly.CircuitBreaker;
 using Products_Core.Adapters.DataAccess;
 using Products_Core.Ports.Commands;
 using Products_Core.Ports.Resources;
@@ -55,7 +58,31 @@ namespace Product_API.Adapters.Controllers
                 productPrice: newProduct.ProductPrice
                 );
 
-            _commandProcessor.Send(addProductCommand);
+            try
+            {
+                _commandProcessor.Send(addProductCommand);
+            }
+            catch (BrokenCircuitException ex)
+            {
+                var message = new HttpResponseMessage((HttpStatusCode) 429)
+                {
+                    Content =
+                        new StringContent(
+                            "The service is currently extremely busy and cannot respond to your request, please retry later"),
+                    ReasonPhrase = "Too Many Requests"
+                };
+                message.Headers.RetryAfter = new RetryConditionHeaderValue(new TimeSpan(0, 1, 0));
+                throw new HttpResponseException(message);
+            }
+            catch (Exception e)
+            {
+                var message = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent("There was an internal error, please wait and try again later")
+                };
+                throw new HttpResponseException(message);
+                
+            }
 
             return Get(addProductCommand.ProductId);
         }

@@ -57,9 +57,11 @@ namespace Product_API.Adapters.Service
                         TimeSpan.FromMilliseconds(6000)
                     });
 
+            //We don't need to break the circuit for this long, but for a demo we need a big enough number that its effect is easy to see
+            //But you should pick a lower value
             var circuitBreakerPolicy = Policy
                 .Handle<Exception>()
-                .CircuitBreaker(1, TimeSpan.FromMilliseconds(500));
+                .CircuitBreaker(1, TimeSpan.FromMilliseconds(60000));
 
             var policyRegistry = new PolicyRegistry()
             {
