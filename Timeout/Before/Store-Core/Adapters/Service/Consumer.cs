@@ -65,10 +65,10 @@ namespace Store_Core.Adapters.Service
                             }
                             Task.Delay(Globals.PollingIntervalInMilliseconds).Wait();
                         }
-                        catch (Exception)
+                        catch (ApplicationException ae)
                         {
-                            _logger.Error("Something went wrong");
-                            throw;
+                            _logger.ErrorException("Something went wrong", ae);
+                            _consumeFeed = false;
                         }
                     }
                 },

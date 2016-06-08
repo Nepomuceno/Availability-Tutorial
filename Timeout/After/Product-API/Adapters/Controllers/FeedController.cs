@@ -38,6 +38,13 @@ namespace Product_API.Adapters.Controllers
         [HttpGet]
         public HttpResponseMessage Recent()
         {
+            //create a 'defect' in our app by spinning, a caller will never get a response and must timeout
+            bool spin = true;
+            while (spin)
+                spin = true;
+
+            /*
+
             var feed = _events.ReadFirst();
             if (feed != null)
             {
@@ -54,8 +61,8 @@ namespace Product_API.Adapters.Controllers
                     };
                 }
             }
-
-            return new HttpResponseMessage(HttpStatusCode.NoContent);
+            */
+            return new HttpResponseMessage(HttpStatusCode.GatewayTimeout);
         }
     }
 }

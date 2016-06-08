@@ -25,7 +25,7 @@ We lock the Products table
 	- We won't return for that 1 minute, as we are are waiting for the lock
 	- Use the SQL Activity Monitor to show the Lock, on which we are waiting and the long running WAITFOR process
 Use Fiddler and the Composer
-  - Run the Add Product Query, show that we get a 500 because we timeout on the add product attempt
+  - Run the Add Product Query, show that we get a 429 because we timeout on the add product attempt
 This locks a thread up whilst we are waiting.
 	
 
@@ -38,7 +38,11 @@ Start the Product-API
 Start Store-Service
 	- The service has such a long timeout (essentially none) that we just sit there waiting for a response, consuming a resource, and not notifying that there is a fault which potentially causes an issue as we are not updating reference data so our system is becoming inconsistent
 Note that Store-Service just hangs, we get no feedback
-Now try setting Store-Service's timeout to a much lower value (the after solution contains this, but its trivial in this case)
-Note that we now get feedback that it has failed
 
 -->Switch to the After solution
+Use the provided .cmd files
+Start the Product-API
+	- The Feed service has been 'sabotaged' and will spin, never returning a response to the caller
+Start Store-Service
+	- The service has a much lower value (the after solution contains this, but its trivial in this case)
+Note that we now get feedback that it has failed
