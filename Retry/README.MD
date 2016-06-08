@@ -30,4 +30,14 @@ Start Store-Service
     - When we time out we throw an exception and die
 Note that we now get feedback that it has failed
 
+-->Switch to after solution
+Start the Product-API
+	- The Feed service has been 'sabotaged' and will spin, but only until it hits a count
+Start Store-Service
+	- The service has a low timeout value
+    - When we time out we throw an exception
+	- NOW Polly retries for us
+	- And we succeed instead of failing
+
+
 	
