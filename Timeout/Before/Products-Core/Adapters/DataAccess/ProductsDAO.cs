@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Products_Core.Model;
 using Simple.Data;
+using Simple.Data.Ado;
 
 namespace Products_Core.Adapters.DataAccess
 {
@@ -15,7 +16,13 @@ namespace Products_Core.Adapters.DataAccess
 
         public dynamic BeginTransaction()
         {
-            return _db.BeginTransaction();
+            var tx = _db.BeginTransaction();
+            //The command will timeout at 30s (too long!!) by default, unless we tell it not too
+            //So let's set an infinite timeout, to show you how an application performs when it does not timeout
+            //N.B. Setting it to 30 or 60s is just as valid to show you tying up a resource.
+            //The minumum you can set is 1s, which is still TOO LONG.
+            tx.WithOptions(new AdoOptions(commandTimeout: 0));
+            return tx;
         }
 
         public Product Add(Product newProduct)

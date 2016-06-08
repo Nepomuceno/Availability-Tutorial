@@ -1,7 +1,22 @@
 SHOWING A DB TIMEOUT
 --------------------
 We want to lock the table, to show that a Db operation ought to time out.
+We set the ProductsDAO ConnectionTimeout value in the ConnectionString to 0; this means wait indefinitely (we want to show this behaviour)
+Use the provided .cmd files
+Start the Product-API
+Use Fiddler and the Composer
+  - Run the Add Product Query, show that we get a 200 as we create the entity
+  - Optionally, show the entity in the Db
 We lock the Products table
+	- Use the provided script to create a 1 minute lock
+	- We won't return for that 1 minute, as we are are waiting for the lock
+	- Note that we use a value of 0 to set 'infinite timeout'
+	- Use the SQL Activity Monitor to show the Lock, on which we are waiting and the long running WAITFOR process
+	- Show in Fiddler that we are waiting
+	- Whilst we are waiting, discuss
+		- Default SQL Timeout of 30s is too long, in fact the minimum timeout of 1s is too long for most use cases.
+		- Also discuss the difference between how long we wait before timing out for a connection (connection string), and for a command to run (SqlCommand)
+This locks a thread up whilst we are waiting.	
 
 SHOWING AN HTTP TIMEOUT
 -----------------------
