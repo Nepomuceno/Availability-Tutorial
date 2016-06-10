@@ -9,4 +9,9 @@ Not shown for HTTP; we would need to 'wait' whilst the circuit is broken before 
 No demo for now, as requires a domain model with one-to-many that can explode (orders?)
 Focusing on other key scenarios i.e. Brighter supported
 
+# Decoupled #
+We should use a GUID to create the new product so that we can later retrieve that same product via a link
+returned from the add method
+
+
 

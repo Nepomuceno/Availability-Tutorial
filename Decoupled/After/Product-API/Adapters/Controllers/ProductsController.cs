@@ -39,7 +39,7 @@ namespace Product_API.Adapters.Controllers
         }
 
         [HttpPost]
-        public ProductModel CreateProduct(AddProductModel newProduct)
+        public HttpResponseMessage CreateProduct(AddProductModel newProduct)
         {
             if (newProduct == null)
             {
@@ -58,21 +58,12 @@ namespace Product_API.Adapters.Controllers
                 productPrice: newProduct.ProductPrice
                 );
 
+            //We switch here from .Send to .Post; which is easy, although we have to ensure
+            //that the service is configured with information on the broker to push to
+            //and we have to have a service to consumer from the queue
             try
             {
-                _commandProcessor.Send(addProductCommand);
-            }
-            catch (BrokenCircuitException ex)
-            {
-                var message = new HttpResponseMessage((HttpStatusCode) 429)
-                {
-                    Content =
-                        new StringContent(
-                            "The service is currently extremely busy and cannot respond to your request, please retry later"),
-                    ReasonPhrase = "Too Many Requests"
-                };
-                message.Headers.RetryAfter = new RetryConditionHeaderValue(new TimeSpan(0, 1, 0));
-                throw new HttpResponseException(message);
+                _commandProcessor.Post(addProductCommand);
             }
             catch (Exception e)
             {
@@ -84,7 +75,9 @@ namespace Product_API.Adapters.Controllers
                 
             }
 
-            return Get(addProductCommand.ProductId);
+            //We no longer return the created entity in the body, as we can't, but an indication that we have accepted the request
+            //and you can obtain it later.    
+            return new HttpResponseMessage(HttpStatusCode.Accepted);
         }
     }
 }

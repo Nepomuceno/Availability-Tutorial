@@ -12,6 +12,7 @@ namespace Product_API.Adapters.Service
         private IDisposable _app;
         public bool Start(HostControl hostControl)
         {
+            log4net.Config.XmlConfigurator.Configure();
             var configuration = ProductServerConfiguration.GetConfiguration();
             var uri = configuration.Address.Uri;
             Globals.HostName = uri.Host + ":" + uri.Port;

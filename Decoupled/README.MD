@@ -14,3 +14,19 @@ This protects the client by failing fast, but wouldn't it be nice if we could ac
 
 -->Switch to after 
 We use a Post instead of a Send so that the command is handled on the far side of a message queue instead.
+Start the Product-API (use the cmd line as the exceptions thrown may get interrupted by VS for debugging, destroying timings)
+We lock the Products table
+	- Use the provided script to create a 10s lock (in Products-Core/Data)
+	- We won't return for that 15s, as we are are waiting for the lock
+  (Why so much shorter? We want to show a queue able to handle an outage for us, so we need the outage to dissappear in a time-frame which
+  we can retry. What would happen if the queue took longer? We might reject the message, but would be in the store for replay. Show this too?)
+Use Fiddler and the Composer
+  - Run the Add Product Query, show that we get a 202 Accepted as we take in the work
+  - Run the Add Product Query again, show that we still get a 202 as more items are added to the queue
+  - Repeat, running a set of new queries that will queue, and fail.
+  - Show the Rabbit queue building up at: http://localhost:55672/#/
+  (N.B. You have to run the consumer to get the queue. The sender sends to the topic, but the consumer creates the queue.
+Now run the Product-Service (use the script)
+  - This will eat the queue (you can see this in RMQ, might be worth dialling up the refresh rate of the web page to 1s instead of 5s)
+    
+

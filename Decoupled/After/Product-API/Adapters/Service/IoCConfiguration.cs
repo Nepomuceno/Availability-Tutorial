@@ -2,6 +2,8 @@
 using Microsoft.Practices.Unity;
 using paramore.brighter.commandprocessor;
 using paramore.brighter.commandprocessor.Logging;
+using paramore.brighter.commandprocessor.messagestore.mssql;
+using paramore.brighter.commandprocessor.messaginggateway.rmq;
 using Polly;
 using Products_Core.Adapters.DataAccess;
 using Products_Core.Ports.Caching;
@@ -11,6 +13,7 @@ using Products_Core.Ports.Handlers;
 using Product_API.Adapters.Caching;
 using Product_API.Adapters.Configuration;
 using Product_API.Adapters.Controllers;
+using Product_API.Adapters.Mappers;
 
 namespace Product_API.Adapters.Service
 {
@@ -72,10 +75,19 @@ namespace Product_API.Adapters.Service
             var handlerConfiguration = new HandlerConfiguration(subscriberRegistry, handlerFactory);
             var inMemoryRequestContextFactory = new InMemoryRequestContextFactory();
 
+            IAmAMessageStore<Message> messageStore = new MsSqlMessageStore(new MsSqlMessageStoreConfiguration("Server=localhost;Database=MessageStore;Trusted_Connection=True", "messages", MsSqlMessageStoreConfiguration.DatabaseType.MsSqlServer));
+            IAmAMessageProducer messageProducer= new RmqMessageProducer();
+
+            IAmAMessageMapperFactory messageMapperFactory = new UnityMessageMapperFactory(container);
+            container.RegisterType<IAmAMessageMapper<AddProductCommand>, AddProductCommandMessageMapper>();
+
+            IAmAMessageMapperRegistry messageMapperRegistry = new MessageMapperRegistry(messageMapperFactory);
+            messageMapperRegistry.Register<AddProductCommand, AddProductCommandMessageMapper>();
+
             var commandProcessor = CommandProcessorBuilder.With()
                 .Handlers(handlerConfiguration)
                 .Policies(policyRegistry)
-                .NoTaskQueues()
+                .TaskQueues(new MessagingConfiguration(messageStore, messageProducer, messageMapperRegistry))
                 .RequestContextFactory(inMemoryRequestContextFactory)
                 .Build();
 

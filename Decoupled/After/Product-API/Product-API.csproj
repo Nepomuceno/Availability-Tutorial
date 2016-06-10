@@ -92,8 +92,20 @@
       <HintPath>..\packages\paramore.brighter.commandprocessor.6.0.6\lib\net45\paramore.brighter.commandprocessor.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="paramore.brighter.commandprocessor.messagestore.mssql, Version=6.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\paramore.brighter.commandprocessor.messagestore.mssql.6.0.6\lib\net45\paramore.brighter.commandprocessor.messagestore.mssql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="paramore.brighter.commandprocessor.messaginggateway.rmq, Version=6.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\paramore.brighter.commandprocessor.messaginggateway.rmq.6.0.6\lib\net45\paramore.brighter.commandprocessor.messaginggateway.rmq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Polly, Version=4.2.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Polly.4.2.1\lib\net45\Polly.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RabbitMQ.Client, Version=3.6.1.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
+      <HintPath>..\packages\RabbitMQ.Client.3.6.1\lib\net45\RabbitMQ.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Simple.Data, Version=0.19.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -110,6 +122,10 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -153,8 +169,10 @@
     <Compile Include="Adapters\Caching\Cache.cs" />
     <Compile Include="Adapters\Configuration\ProductServiceConfiguration.cs" />
     <Compile Include="Adapters\Configuration\UnityHandlerFactory.cs" />
+    <Compile Include="Adapters\Configuration\UnityMessageMapperFactory.cs" />
     <Compile Include="Adapters\Controllers\FeedController.cs" />
     <Compile Include="Adapters\Controllers\ProductsController.cs" />
+    <Compile Include="Adapters\Mappers\AddProductCommandMessageMapper.cs" />
     <Compile Include="Adapters\Service\IoCConfiguration.cs" />
     <Compile Include="Adapters\Service\ProductService.cs" />
     <Compile Include="Adapters\Service\Startup.cs" />
@@ -177,9 +195,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DDL Scripts\MSSQL\MessageStore.sql" />
+    <Content Include="DDL Scripts\SQLite\MessageStore.sql" />
     <Content Include="RESTManualTests.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
+    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
+    if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
+    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
