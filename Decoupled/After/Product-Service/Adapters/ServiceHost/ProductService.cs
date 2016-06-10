@@ -6,6 +6,7 @@ using paramore.brighter.commandprocessor.Logging;
 using paramore.brighter.commandprocessor.messaginggateway.rmq;
 using paramore.brighter.serviceactivator;
 using Polly;
+using Products_Core.Adapters.DataAccess;
 using Products_Core.Ports.Commands;
 using Products_Core.Ports.Handlers;
 using Product_Service.Ports.Mappers;
@@ -26,6 +27,7 @@ namespace Product_Service.Adapters.ServiceHost
             container.RegisterInstance(typeof(ILog), LogProvider.For<ProductService>(), new ContainerControlledLifetimeManager());
             container.RegisterType<AddProductCommandMessageMapper>();
             container.RegisterType<AddProductCommandHandler>();
+            container.RegisterType<IProductsDAO, ProductsDAO>();
 
             var handlerFactory = new UnityHandlerFactory(container);
             var messageMapperFactory = new UnityMessageMapperFactory(container);
@@ -59,6 +61,8 @@ namespace Product_Service.Adapters.ServiceHost
                 .NoTaskQueues()
                 .RequestContextFactory(new InMemoryRequestContextFactory())
                 .Build();
+
+            container.RegisterInstance(typeof (IAmACommandProcessor), commandProcessor);
 
             //create message mappers
             var messageMapperRegistry = new MessageMapperRegistry(messageMapperFactory);
