@@ -13,5 +13,9 @@ Focusing on other key scenarios i.e. Brighter supported
 We should use a GUID to create the new product so that we can later retrieve that same product via a link
 returned from the add method
 
+# Parallel Pipelines #
+We should show handling a piece of work, and in-turn forwarding some of that work out to other filters over a message queue
+
+
 
 
