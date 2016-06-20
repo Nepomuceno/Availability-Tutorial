@@ -10,4 +10,12 @@ Demo the Baseline to show
 
  # Retry #
  Demos around adding code to retry an operation
+
+ # Circuit Breakder #
+ Demos around adding code to circuit breaker on repeated failures
+
+ # Decoupled #
+ Demos around decoupling the sender and reciever using middleware
+ 
+
  
